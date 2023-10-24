@@ -1,4 +1,4 @@
-your_bot_token = "1396017731:AAEMTxMjgLPB7pnvpstXB_skXzSHdlYFyJo"
+your_bot_token = ""
 
 import re
 from telegram import Update
