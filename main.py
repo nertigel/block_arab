@@ -1,4 +1,4 @@
-your_bot_token = ""
+your_bot_token = "1396017731:AAEMTxMjgLPB7pnvpstXB_skXzSHdlYFyJo"
 
 import re
 from telegram import Update
@@ -25,12 +25,8 @@ def main() -> None:
     # Create the Application and pass it your bot's token.
     application = Application.builder().token(your_bot_token).build()
     
-    __handlers__ = {}
-    __handlers__["restrict_keywords"] = MessageHandler(filters.TEXT & (~filters.COMMAND), message_handler)
-
-    for name, handler in __handlers__.items():
-        print(f'Adding handler {name}')
-        application.add_handler(handler)
+    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), message_handler))
+    print("Bot running")
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()
