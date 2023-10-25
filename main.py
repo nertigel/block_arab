@@ -1,4 +1,4 @@
-your_bot_token = ""
+your_bot_token = "YOUR_TOKEN_HERE"
 
 import re
 from telegram import Update
@@ -8,17 +8,26 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+unallowed_emojis = ['🇵🇸', '🇦🇪', '🇪🇬', '🇮🇷', '🇮🇶', '🇯🇴', '🇰🇼', '🇱🇧', '🇸🇦', '🇶🇦', '🇸🇾', '🇾🇪']
 
 async def message_handler(update: Update, context: CallbackContext):
     message = update.message.text
     chat_id = update.message.chat_id
     message_id = update.message.message_id
+    username = update.message.from_user.username
 
     print(f"Received message: {message}")
 
+    for emoji in unallowed_emojis:
+        pattern = re.escape(emoji)
+        if re.search(pattern, message):
+            await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+            await context.bot.send_message(chat_id=chat_id, text=f"@{username} has sent blacklisted emojis.")
+            break
+    
     if re.search('[\u0600-\u06FF]', message):
-        await context.bot.send_message(chat_id=chat_id, text=f"A terrorist sent a message: {message}")
         await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+        await context.bot.send_message(chat_id=chat_id, text=f"@{username} has sent blacklisted characters.")
 
 def main() -> None:
     """Run the bot."""
