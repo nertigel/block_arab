@@ -1,7 +1,8 @@
 # block_arab for Telegram
 This is a python-telegram-bot to handle/filter sent messages that contain any Arabic letters or country emojis. 
 
-Very helpful in the current state against spammers.
+Very helpful in the current state against spammers. Now up and running, invite to your group/channel for free by clicking [here](https://t.me/BlockArabSpamBot).
+
 
 # Installation
 
