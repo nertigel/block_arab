@@ -17,3 +17,8 @@ First line in the `main.py` file you will find the bot token variable, get your 
 your_bot_token = "YOUR_TOKEN_HERE"
 ```
 
+These are the current flags that are being blacklisted:
+
+```python
+['🇵🇸', '🇦🇪', '🇪🇬', '🇮🇷', '🇮🇶', '🇯🇴', '🇰🇼', '🇱🇧', '🇸🇦', '🇶🇦', '🇸🇾', '🇾🇪']
+```
