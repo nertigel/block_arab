@@ -41,25 +41,28 @@ logger.addHandler(console_handler)
 unallowed_emojis = ['🇵🇸', '🇦🇪', '🇪🇬', '🇮🇷', '🇮🇶', '🇯🇴', '🇰🇼', '🇱🇧', '🇸🇦', '🇶🇦', '🇸🇾', '🇾🇪']
 
 async def message_handler(update: Update, context: CallbackContext):
-    message = update.message.text
-    chat_id = update.message.chat_id
-    message_id = update.message.message_id
-    username = update.message.from_user.username
+    try:
+        message = update.message.text
+        chat_id = update.message.chat_id
+        message_id = update.message.message_id
+        username = update.message.from_user.username
 
-    # search emojis
-    for emoji in unallowed_emojis:
-        pattern = re.escape(emoji)
-        if re.search(pattern, message):
-            logger.info(f"Message from @{username} with blacklisted emojis at chat: {chat_id}")
+        # search emojis
+        for emoji in unallowed_emojis:
+            pattern = re.escape(emoji)
+            if re.search(pattern, message):
+                logger.info(f"Message from @{username} with blacklisted emojis at chat: {chat_id}")
+                await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+                await context.bot.send_message(chat_id=chat_id, text=f"@{username} has sent blacklisted emojis.")
+                break
+        
+        # search letters
+        if re.search('[\u0600-\u06FF]', message):
+            logger.info(f"Message from @{username} with blacklisted characters at chat: {chat_id}")
             await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-            await context.bot.send_message(chat_id=chat_id, text=f"@{username} has sent blacklisted emojis.")
-            break
-    
-    # search letters
-    if re.search('[\u0600-\u06FF]', message):
-        logger.info(f"Message from @{username} with blacklisted characters at chat: {chat_id}")
-        await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-        await context.bot.send_message(chat_id=chat_id, text=f"@{username} has sent blacklisted characters.")
+            await context.bot.send_message(chat_id=chat_id, text=f"@{username} has sent blacklisted characters.")
+    except Exception as e:
+        print(f"message_handler exception: {str(e)}")
 
 def main() -> None:
     """Run the bot."""
@@ -69,7 +72,7 @@ def main() -> None:
     
     logger.info("Starting the bot")
     application = Application.builder().token(your_bot_token).build()
-    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), message_handler))
+    application.add_handler(MessageHandler(filters.TEXT, message_handler))
     application.run_polling()
     logger.info("ded")
 
